@@ -17,7 +17,7 @@ public class Main {
         //System.out.println(i + ':' + Operation.get() );
     }
 
-    public static void CreatOperation(int NUM, int BOUND){//以字符串数组形式创建
+    public static String[] CreatOperation(int NUM, int BOUND){//以字符串数组形式创建
 
         ArrayList<String> Operation = new ArrayList<>();//四则运算式的数组Operation
         String tempOP ;
@@ -56,27 +56,34 @@ public class Main {
                 if(ifInt > 5)
                     temp[j] = (int)temp[j];
 
-                if(temp[1] == temp[0])
-                {
-                    temp[1] = random.nextDouble(BOUND);
-
-                    temp[1] = Math.round(temp[j] * 100.0) / 100.0;
-                }
-                if(tl[0] == "-" && temp[0] < temp[1])
-                {
-                    double new1 = temp[0];
-                    temp[0] = temp[1];
-                    temp[1] = new1;
-                }
-                if(tl[1] == "-" && temp[1] < temp[2])
-                {
-                    double new1 = temp[1];
-                    temp[1] = temp[2];
-                    temp[2] = new1;
-                }
                     OPNum[j] = NumberConverter.convertNumber(temp[j]);
             }
 
+            if(tl[0] == "-" && temp[0] < temp[1])
+            {
+                double new1 = temp[0];
+                temp[0] = temp[1];
+                temp[1] = new1;
+            }
+            if(tl[1] == "-" && temp[1] < temp[2])
+            {
+                double new1 = temp[1];
+                temp[1] = temp[2];
+                temp[2] = new1;
+                if(tl[0] == "-" && temp[0] < temp[1])
+                {
+                    double new3 = temp[0];
+                    temp[0] = temp[1];
+                    temp[1] = new3;
+                }
+            }
+            if(temp[1] == temp[0])
+            {
+
+                temp[1] = random.nextDouble(BOUND);
+
+                temp[1] = Math.round(temp[1] * 100.0) / 100.0;
+            }
             if(tl[0] == "/" && OPNum[1] == "0")
             {
                 i--;
@@ -97,9 +104,14 @@ public class Main {
 
                 //System.out.print(NumberConverter.convertNumber(result_temp) + "  ");
                 System.out.println( Operation.get(i) );
+
+
             }
         }
 
+        String[] a = new String[Operation.size()];
+        a = Operation.toArray(a);
+        return a;
     }
 }
 

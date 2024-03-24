@@ -5,28 +5,50 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import java.awt.*;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.Random;
 import java.util.ArrayList;
 import java.text.DecimalFormat;
 
 public class test{
-    public static void main(String[] argc){
+    public static void main(String[] args) {
+        String[] lines = {"第一行内容", "第二行内容", "第三行内容"};
 
-        Object[] options = {"生成四则运算式", "检查答案"};
-        int option = JOptionPane.showOptionDialog(null, "请选择一个选项：", "自定义选项对话框", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+        try {
+            FileWriter fileWriter = new FileWriter("output.txt");
+            PrintWriter printWriter = new PrintWriter(fileWriter);
 
-        switch (option) {
-            case 0:
-                System.out.println("生成四则运算式");
-                break;
-            case 1:
-                System.out.println("检查答案");
-                break;
+            for (String line : lines) {
+                printWriter.println(line);
+            }
 
-            default:
-                System.out.println("用户关闭了对话框");
-                break;
+            printWriter.close();
+            System.out.println("字符串数组已成功写入到文件中。");
+        } catch (Exception e) {
+            System.out.println("写入文件时发生错误：" + e.getMessage());
         }
+    }
+
+
+
+//    public static void main(String[] argc){
+//
+//        Object[] options = {"生成四则运算式", "检查答案"};
+//        int option = JOptionPane.showOptionDialog(null, "请选择一个选项：", "自定义选项对话框", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+//
+//        switch (option) {
+//            case 0:
+//                System.out.println("生成四则运算式");
+//                break;
+//            case 1:
+//                System.out.println("检查答案");
+//                break;
+//
+//            default:
+//                System.out.println("用户关闭了对话框");
+//                break;
+//        }
 
 
 
@@ -43,7 +65,7 @@ public class test{
 //            System.out.println("选择的文件是：" + selectedFile.getName());
 //        }
     }
-}
+
 
 
 

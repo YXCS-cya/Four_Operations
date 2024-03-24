@@ -31,23 +31,34 @@ public class Menu {
 
     public static void PRINT1(String[] a){
         String Loading = a[0];
-        for(int i = 1; i < a.length; i++){
-            Loading = "\n" + a[i];
+        if(a.length > 30)
+        {
+            JOptionPane.showMessageDialog(null, "生成题目数量较多，请打开Exercises.txt文件查看！", "四则运算式", JOptionPane.INFORMATION_MESSAGE);
         }
-        JOptionPane.showMessageDialog(null, Loading, "四则运算式", JOptionPane.INFORMATION_MESSAGE);
+        else{
+            for(int i = 1; i < a.length; i++){
+                Loading = Loading +"\n" + a[i];
+            }
+            JOptionPane.showMessageDialog(null, Loading, "四则运算式", JOptionPane.INFORMATION_MESSAGE);
+        }
+
     }
     public static void Datain(){
-        String input = JOptionPane.showInputDialog(null, "请输入生成题目数量", "题目生成", JOptionPane.QUESTION_MESSAGE);
+        String input = JOptionPane.showInputDialog(null, "请输入生成题目数量" + "\n（如果生成的题目数过大，请调整算数的范围，否则难以避免出现类似题目）", "题目生成", JOptionPane.QUESTION_MESSAGE);
         int num1 = 0, num2 = 0;
         if (input == null)
             System.out.println("用户取消输入");
         else {
-            String input_Bound = JOptionPane.showInputDialog(null, "请输入生成题目数值范围（如：100）", "题目生成", JOptionPane.QUESTION_MESSAGE);
+            String input_Bound = JOptionPane.showInputDialog(null, "请输入生成题目数值范围（如：100）" , "题目生成", JOptionPane.QUESTION_MESSAGE);
             num1 = Integer.parseInt(input);
             num2 = Integer.parseInt(input_Bound);
-            Main.CreatOperation(num1, num2);
 
-            PRINT1();
+
+
+            String[] a = new String[num1+1];
+            a = Main.CreatOperation(num1, num2);
+            PRINT1(a);
+            File.DataWrite(a);
         }
     }
 
