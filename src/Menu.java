@@ -11,17 +11,46 @@ import java.awt.event.ActionListener;
 
 public class Menu {
     public static void Show() {
-        String input = JOptionPane.showInputDialog(null, "请输入生成题目数量", "输入", JOptionPane.QUESTION_MESSAGE);
-        int num1 = 0;
+        Object[] options = {"生成四则运算式", "检查答案"};
+        int option = JOptionPane.showOptionDialog(null, "请选择一个选项：", "自定义选项对话框", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+
+        switch (option) {
+            case 0:
+//                System.out.println("生成四则运算式");
+                Datain();
+                break;
+            case 1:
+                System.out.println("检查答案");
+                break;
+
+            default:
+                System.out.println("用户关闭了对话框");
+                break;
+        }
+    }
+
+    public static void PRINT1(String[] a){
+        String Loading = a[0];
+        for(int i = 1; i < a.length; i++){
+            Loading = "\n" + a[i];
+        }
+        JOptionPane.showMessageDialog(null, Loading, "四则运算式", JOptionPane.INFORMATION_MESSAGE);
+    }
+    public static void Datain(){
+        String input = JOptionPane.showInputDialog(null, "请输入生成题目数量", "题目生成", JOptionPane.QUESTION_MESSAGE);
+        int num1 = 0, num2 = 0;
         if (input == null)
             System.out.println("用户取消输入");
         else {
+            String input_Bound = JOptionPane.showInputDialog(null, "请输入生成题目数值范围（如：100）", "题目生成", JOptionPane.QUESTION_MESSAGE);
             num1 = Integer.parseInt(input);
-            Main.CreatOperation(num1, 100);
-        }
+            num2 = Integer.parseInt(input_Bound);
+            Main.CreatOperation(num1, num2);
 
-        //System.out.println("生成题目数为：" + input);
+            PRINT1();
+        }
     }
+
 }
 
 /*JFrame frame = new JFrame("Menu Window Example");
