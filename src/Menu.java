@@ -30,19 +30,19 @@ public class Menu {
     }
 
     public static void PRINT1(String[] a){
-        String Loading = a[0];
+        String Loading = 1 + "." + a[0];
         if(a.length > 30)
         {
             JOptionPane.showMessageDialog(null, "生成题目数量较多，请打开Exercises.txt文件查看！", "四则运算式", JOptionPane.INFORMATION_MESSAGE);
         }
         else{
             for(int i = 1; i < a.length; i++){
-                Loading = Loading +"\n" + a[i];
+                Loading =  Loading +"\n" + (i+1) + ".\t" +a[i];
             }
             JOptionPane.showMessageDialog(null, Loading, "四则运算式", JOptionPane.INFORMATION_MESSAGE);
         }
-
     }
+
     public static void Datain(){
         String input = JOptionPane.showInputDialog(null, "请输入生成题目数量" + "\n（如果生成的题目数过大，请调整算数的范围，否则难以避免出现类似题目）", "题目生成", JOptionPane.QUESTION_MESSAGE);
         int num1 = 0, num2 = 0;
