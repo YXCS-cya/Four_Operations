@@ -1,17 +1,14 @@
 //package org.example;
 //import com.sun.xml.internal.txw2.output.DataWriter;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.PrintWriter;
+import java.awt.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Correct {
-    public static void Get_Grade(String args) {
-        String filePath = args; //"F:/学习/编程/软件工程/四则运算生成器-java/Four_Operations/output.txt"; // 替换为实际的文件路径
+    public static void Get_Grade(/*String args*/) {
+        String filePath = "F:/学习/编程/软件工程/四则运算生成器-java/Four_Operations/Exercises.txt";//args; //"F:/学习/编程/软件工程/四则运算生成器-java/Four_Operations/output.txt"; // 替换为实际的文件路径
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             String[] lines = new String[10000];
@@ -33,16 +30,17 @@ public class Correct {
                 }
                 index++;
             }
-            File.DataWriter(out);
-            CompareFiles.compareFiles("output.txt", "daan.txt");//1：临时文件  2.待比较答案
+            File1.DataWriter(out);
+            //CompareFiles.compareFiles("output.txt", "daan.txt");//1：临时文件  2.待比较答案
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    public static class File {
+
+    public static class File1 {
         public static void DataWriter(String[] Operation){//输入存储字符串的数组，自动录入文件
             try {
-                FileWriter fileWriter = new FileWriter("output.txt");//还有答案、成绩文档需生成
+                FileWriter fileWriter = new FileWriter("Answers.txt");//还有答案、成绩文档需生成
                 PrintWriter printWriter = new PrintWriter(fileWriter);
 
                 for (String line : Operation) {
@@ -53,7 +51,7 @@ public class Correct {
                 }
 
                 printWriter.close();
-                System.out.println("字符串数组已成功写入到文件中。");
+                System.out.println("答案已成功写入到文件Answers.txt");
             } catch (Exception e) {
                 System.out.println("写入文件时发生错误：" + e.getMessage());
             }
@@ -63,11 +61,11 @@ public class Correct {
         // 根据加号和减号将表达式分割成操作数数组
         String[] tokens = expression.split("(?=[-+*/'.])|(?<=[-+*/'.])");
         // 初始化结果为第一个操作数
-        Fraction[] fr = new Fraction[10];
-        for (int i = 0; i < 10; i++) {
+        Fraction[] fr = new Fraction[1000];
+        for (int i = 0; i < 1000; i++) {
             fr[i] = new Fraction(0, 0, 1);
         }
-        char[] op = new char[10];
+        char[] op = new char[1000];
         int a = 0, b = 0;
         // 从第一个操作数开始遍历，根据运算符进行加减操作
         for (int i = 2; i < tokens.length; i+=2) {
@@ -92,6 +90,7 @@ public class Correct {
                     fr[a].numerator = Integer.parseInt(tokens[i + 2]);
                     fr[a].denominator = Integer.parseInt(tokens[i + 4]);
                     a++;
+                    if(i+5 == tokens.length) break;
                     op[b] = tokens[i + 5].charAt(0);
                     b++;
                     i += 4;
@@ -270,6 +269,23 @@ public class Correct {
                 writer.write("Wrong: " + wrongLines.size() + " (" + wrongLines.toString().replaceAll("[\\[\\]]", "") + ")\n");
                 writer.close();
                 System.out.println("Results written to Grade.txt");
+                try{
+                    File txtFile = new File("Grade.txt");
+                    {
+                        if(txtFile.exists()){
+                            Desktop.getDesktop().open(txtFile);
+                        }else{
+                            System.out.println("File not found!");
+                        }
+                    }
+                }
+
+                    catch(IOException e)
+
+                    {
+                        System.out.println("打开文件出现错误："+e.getMessage());
+                    }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

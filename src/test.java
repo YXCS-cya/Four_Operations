@@ -1,168 +1,293 @@
-import javax.swing.*;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
+//package org.example;
+//import com.sun.xml.internal.txw2.output.DataWriter;
+
 import java.awt.*;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.util.Random;
+import java.io.*;
 import java.util.ArrayList;
-import java.text.DecimalFormat;
+import java.util.List;
 
-public class test{
-    public static void main(String[] args) {
-        String[] lines = {"第一行内容", "第二行内容", "第三行内容"};
-
-        try {
-            FileWriter fileWriter = new FileWriter("output.txt");
-            PrintWriter printWriter = new PrintWriter(fileWriter);
-
-            for (String line : lines) {
-                printWriter.println(line);
+public class test {
+    public static void main1(String Exer, String daan) {
+        String filePath = Exer; // 替换为实际的文件路径
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            String[] lines = new String[10000];
+            int index = 0;
+            String[] out = new String[10000];
+            while ((line = reader.readLine()) != null) {
+                Fraction result;
+                result = evaluateExpression(line);
+                lines[index] = line;
+                if (result.numerator == 0) {
+                    out[index]=(index+1)+"."+result.wholePart;
+                    //System.out.println(out[index]);//输出
+                } else if (result.wholePart == 0) {
+                    out[index]=(index+1)+"."+result.numerator + "/" + result.denominator;
+                    //System.out.println(out[index]); // 输出
+                } else {
+                    out[index]=(index+1)+"."+result.wholePart + "'" + result.numerator + "/" + result.denominator;
+                    //System.out.println(out[index]); // 输出
+                }
+                index++;
             }
-
-            printWriter.close();
-            System.out.println("字符串数组已成功写入到文件中。");
+            File.DataWriter(out);
+            CompareFiles.compareFiles("output.txt", daan);
         } catch (Exception e) {
-            System.out.println("写入文件时发生错误：" + e.getMessage());
+            e.printStackTrace();
         }
     }
+    public static class File {
+        public static void DataWriter(String[] Operation){//输入存储字符串的数组，自动录入文件
+            try {
+                FileWriter fileWriter = new FileWriter("output.txt");//还有答案、成绩文档需生成
+                PrintWriter printWriter = new PrintWriter(fileWriter);
 
+                for (String line : Operation) {
+                    if (line == null) {
+                        break;
+                    }
+                    printWriter.println(line);
+                }
 
-
-//    public static void main(String[] argc){
-//
-//        Object[] options = {"生成四则运算式", "检查答案"};
-//        int option = JOptionPane.showOptionDialog(null, "请选择一个选项：", "自定义选项对话框", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-//
-//        switch (option) {
-//            case 0:
-//                System.out.println("生成四则运算式");
-//                break;
-//            case 1:
-//                System.out.println("检查答案");
-//                break;
-//
-//            default:
-//                System.out.println("用户关闭了对话框");
-//                break;
-//        }
-
-
-
-
-//        Color selectedColor = JColorChooser.showDialog(null, "选择颜色", Color.RED);
-//        System.out.println("选择的颜色是：" + selectedColor);
-        //JOptionPane.showMessageDialog(null, "这是一个简单的信息框", "信息", JOptionPane.INFORMATION_MESSAGE);
-
-        //文件选择框
-//        JFileChooser fileChooser = new JFileChooser();
-//        int returnValue = fileChooser.showOpenDialog(null);
-//        if (returnValue == JFileChooser.APPROVE_OPTION) {
-//            File selectedFile = fileChooser.getSelectedFile();
-//            System.out.println("选择的文件是：" + selectedFile.getName());
-//        }
+                printWriter.close();
+                System.out.println("字符串数组已成功写入到文件中。");
+            } catch (Exception e) {
+                System.out.println("写入文件时发生错误：" + e.getMessage());
+            }
+        }
     }
+    public static Fraction evaluateExpression(String expression) {
+        // 根据加号和减号将表达式分割成操作数数组
+        String[] tokens = expression.split("(?=[-+*/'.])|(?<=[-+*/'.])");
+        // 初始化结果为第一个操作数
+        Fraction[] fr = new Fraction[10];
+        for (int i = 0; i < 10; i++) {
+            fr[i] = new Fraction(0, 0, 1);
+        }
+        char[] op = new char[10];
+        int a = 0, b = 0;
+        // 从第一个操作数开始遍历，根据运算符进行加减操作
+        for (int i = 2; i < tokens.length; i+=2) {
+            if (i + 1 == tokens.length) {
+                fr[a].wholePart = Integer.parseInt(tokens[i]);
+                a++;
+                break;
+            }
+            char operator = tokens[i+1].charAt(0);
+            switch (operator) {
+                case '+':
+                case '-':
+                case '*':
+                case '/':
+                    fr[a].wholePart = Integer.parseInt(tokens[i]);
+                    a++;
+                    op[b] = operator;
+                    b++;
+                    break;
+                case '\'':
+                    fr[a].wholePart = Integer.parseInt(tokens[i]);
+                    fr[a].numerator = Integer.parseInt(tokens[i + 2]);
+                    fr[a].denominator = Integer.parseInt(tokens[i + 4]);
+                    a++;
+                    op[b] = tokens[i + 5].charAt(0);
+                    b++;
+                    i += 4;
+                    break;
+            }
+        }
 
 
 
+        Fraction result;
+        Fraction[] temp = new Fraction[10];
+        for (int i = 0; i < 10; i++) {
+            temp[i] = new Fraction(0, 0, 1);
+        }
+        int ta = 0, tb = 0;
+        char[] op2 = new char[10];
+        for (int i = 0; i < b; i++) {
+            if (op[i] == '+'||op[i] == '-') {
+                op2[tb] = op[i];
+                tb++;
+            }
+        }
+        for (int i = 0; i <= b; i++) {
+            if (op[i] == '+'||op[i] == '-') {
+                temp[ta] = fr[i];
+                ta++;
+            } else if (op[i] == '*') {
+                temp[ta] = temp[ta].multiplyMixedNumber(fr[i], fr[i + 1]);
+                fr[i + 1] = temp[ta];
+                /*ta++;
+                i++;*/
+            } else if (op[i] == '/') {
+                temp[ta] = temp[ta].divideMixedNumber(fr[i], fr[i + 1]);
+                fr[i + 1] = temp[ta];
+                /*ta++;
+                i++;*/
+            } else if (i == b) {
+                temp[ta] = fr[i];
+                ta++;
+            }
+        }
+        result = temp[0];
+        for (int i = 0; i < tb; i++) {
+            if (op2[i] == '+') {
+                result = result.addMixedNumber(result, temp[i + 1]);
+            } else if (op2[i] == '-') {
+                result = result.subtractMixedNumber(result, temp[i + 1]);
+            }
+        }
+        return result; // 返回最终计算结果
+    }
+    public static class Fraction {
+        private long wholePart;   //整数
+        private long numerator;   // 分子
+        private long denominator; // 分母
+        // 构造函数
+        public Fraction(long wholePart, long numerator, long denominator) {
+            this.wholePart = wholePart;
+            this.numerator = numerator;
+            this.denominator = denominator;
+        }
 
+        // 假分数转为带分数
+        private Fraction simplify(Fraction a) {
+            a.wholePart = a.numerator / a.denominator;
+            if (a.numerator == 0) {
+                a.denominator = 1;
+            } else if (a.numerator % a.denominator != 0) {
+                long gcd = greatestCommonDivisor(a.numerator, a.denominator);
+                a.numerator /= gcd;
+                a.denominator /= gcd;
+                a.numerator -= a.wholePart * a.denominator;
+            } else if (numerator % denominator == 0) {
+                a.numerator = 0;
+                a.denominator = 1;
+            }
+            return new Fraction(a.wholePart, a.numerator, a.denominator);
+        }
 
+        // 求两个数的最大公约数
+        private long greatestCommonDivisor(long a, long b) {
+            return (b == 0) ? a : greatestCommonDivisor(b, a % b);
+        }
+        // 将带分数转换为假分数
+        private Fraction toImproperFraction(Fraction a) {
+            long newNumerator = a.wholePart * a.denominator + ((a.numerator < 0) ? -a.numerator : a.numerator);
+            a.wholePart = 0;
+            return new Fraction(a.wholePart, newNumerator, a.denominator);
+        }
+        // 假分数加法
+        public Fraction addMixedNumber(Fraction a,Fraction b) {
+            a = toImproperFraction(a);
+            b = toImproperFraction(b);
+            long newNumerator = a.numerator * b.denominator + a.denominator * b.numerator;
+            long newDenominator = a.denominator * b.denominator;
+            Fraction c=new Fraction(0, newNumerator, newDenominator);
+            c = simplify(c);
+            return c;
+        }
 
+        // 假分数减法
+        public Fraction subtractMixedNumber(Fraction a,Fraction b) {
+            a = toImproperFraction(a);
+            b = toImproperFraction(b);
+            long newNumerator = a.numerator * b.denominator - a.denominator * b.numerator;
+            long newDenominator = a.denominator * b.denominator;
+            Fraction c=new Fraction(0, newNumerator, newDenominator);
+            c = simplify(c);
+            return c;
+        }
 
+        // 假分数乘法
+        public Fraction multiplyMixedNumber(Fraction a,Fraction b) {
+            a = toImproperFraction(a);
+            b = toImproperFraction(b);
+            long newNumerator = a.numerator * b.numerator;
+            long newDenominator = a.denominator * b.denominator;
+            Fraction c=new Fraction(0, newNumerator, newDenominator);
+            c = simplify(c);
+            return c;
+        }
 
+        // 假分数除法
+        public Fraction divideMixedNumber(Fraction a,Fraction b) {
+            a = toImproperFraction(a);
+            b = toImproperFraction(b);
+            long newNumerator = a.numerator * b.denominator;
+            long newDenominator = a.denominator * b.numerator;
+            Fraction c=new Fraction(0, newNumerator, newDenominator);
+            c = simplify(c);
+            return c;
+        }
+    }
+    public static class CompareFiles {
+        public static void compareFiles(String file1Path, String file2Path) {
+            List<Integer> correctLines = new ArrayList<>();
+            List<Integer> wrongLines = new ArrayList<>();
 
+            try {
+                BufferedReader reader1 = new BufferedReader(new FileReader(file1Path));
+                BufferedReader reader2 = new BufferedReader(new FileReader(file2Path));
 
+                int lineNum = 1;
+                String line1 = reader1.readLine();
+                String line2 = reader2.readLine();
+                while (line1 != null && line2 != null) {
+                    if (!line1.equals(line2)) {
+                        wrongLines.add(lineNum);
+                    } else {
+                        correctLines.add(lineNum);
+                    }
+                    line1 = reader1.readLine();
+                    line2 = reader2.readLine();
+                    lineNum++;
+                }
 
+                if (line1 != null || line2 != null) {
+                    System.out.println("Files have different number of lines");
+                } else {
+                    System.out.println("Files are identical");
+                }
 
+                reader1.close();
+                reader2.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
+            writeResultToFile(correctLines, wrongLines);
+        }
 
+        private static void writeResultToFile(List<Integer> correctLines, List<Integer> wrongLines) {
+            try {
+                BufferedWriter writer = new BufferedWriter(new FileWriter("Grade.txt"));
+                writer.write("Correct: " + correctLines.size() + " (" + correctLines.toString().replaceAll("[\\[\\]]", "") + ")\n");
+                writer.write("Wrong: " + wrongLines.size() + " (" + wrongLines.toString().replaceAll("[\\[\\]]", "") + ")\n");
+                writer.close();
+                System.out.println("Results written to Grade.txt");
 
+                try{
+                    java.io.File txtFile = new java.io.File("Grade.txt");
+                    {
+                        if(txtFile.exists()){
+                            Desktop.getDesktop().open(txtFile);
+                        }else{
+                            System.out.println("File not found!");
+                        }
+                    }
+                }
 
+                catch(IOException e)
 
-//public class test {
-//
-//    public static void main(String[] args){
-//        double num1 = 9.56548446;
-//        double num2 = 4.2;
-//        double num3 = 7;
-//
-//
-//        System.out.println(NumberConverter.convertNumber(num1)); // 输出5'3/4
-//        System.out.println(NumberConverter.convertNumber(num2)); // 输出4'1/5
-//        System.out.println(NumberConverter.convertNumber(num3)); // 输出7
-//    }
-//     //测试方法
-//
-//    public class NumberConverter {
-//
-//        public static double convertNumberToDouble(double number) {//以整型/浮点型返回真分数
-//
-//            DecimalFormat df = new DecimalFormat("#.##"); // 格式化规则，保留两位小数
-//            String formattedNumber = df.format(number); // 格式化操作
-//            double result = Double.parseDouble(formattedNumber); // 将格式化后的字符串转换为double类型
-//
-//            number = result;
-//
-//            if (number % 1 == 0) {
-//                // 如果是整数，直接返回整型
-//                return (int) number;
-//            } else {
-//                // 如果是小数，转换成浮点型
-//                // 先将小数部分转换成真分数
-//                int numerator = (int) Math.floor(number);
-//                int denominator = 1;
-//                double decimalPart = number - numerator;
-//                while (Math.abs(decimalPart - Math.round(decimalPart)) > 0.0001) {
-//                    denominator *= 10;
-//                    decimalPart *= 10;
-//                }
-//                int fractionPart = (int) Math.round(decimalPart);
-//
-//                return numerator + (double) fractionPart / denominator;
-//            }
-//        }
-//
-//        public static String convertNumber(double number)//将小数转换成真分数，以字符串形式返回
-//        {
-//
-//            DecimalFormat df = new DecimalFormat("#.##"); // 格式化规则，保留两位小数
-//            String formattedNumber = df.format(number); // 格式化操作
-//            double result = Double.parseDouble(formattedNumber); // 将格式化后的字符串转换为double类型
-//
-//            number = result;
-//
-//            if (number % 1 == 0) {
-//                // 如果是整数，直接返回整型
-//                return String.valueOf((int) number);
-//            } else {
-//                // 如果是小数，转换成真分数形式
-//                // 分子
-//                int numerator = (int) Math.floor(number);
-//                // 分母
-//                int denominator = 1;
-//                double decimalPart = number - numerator;
-//                while (Math.abs(decimalPart - Math.round(decimalPart)) > 0.0001) {
-//                    denominator *= 10;
-//                    decimalPart *= 10;
-//                }
-//                int fractionPart = (int) Math.round(decimalPart);
-//
-//                // 化简真分数
-//                int gcd = gcd(fractionPart, denominator);
-//                fractionPart /= gcd;
-//                denominator /= gcd;
-//
-//                return numerator + "'" + fractionPart + "/" + denominator;
-//            }
-//        }
-//
-//        // 求最大公约数
-//        private static int gcd(int a, int b) {
-//            return b == 0 ? a : gcd(b, a % b);
-//        }
-//
-//    }
-//}
+                {
+                    System.out.println("打开文件出现错误："+e.getMessage());
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}

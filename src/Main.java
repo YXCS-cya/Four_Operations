@@ -48,7 +48,7 @@ public class Main {
                 OPNum[3] = "\0";
             for (int j = 0; j < numIN; j++){
 
-                temp[j] = random.nextDouble(BOUND);
+                temp[j] = random.nextDouble(BOUND)+1;
 
                  temp[j] = Math.round(temp[j] * 100.0) / 100.0;
 
@@ -77,32 +77,24 @@ public class Main {
                     temp[1] = new3;
                 }
             }
-            if(temp[1] == temp[0])
-            {
 
-                temp[1] = random.nextDouble(BOUND);
-
-                temp[1] = Math.round(temp[1] * 100.0) / 100.0;
-            }
             if(tl[0] == "/" && OPNum[1] == "0")
             {
                 i--;
             } else if (tl[1] == "/" && OPNum[2] == "0") {
                 i--;
             }
-//            else if(-1.0 == Result.DataIn(temp[0], temp[1], temp[2], tl[0], tl[1])){
-//                i--;
-//            }
+
+            if(false == Result.DataIn((int)temp[0], (int)temp[1],(int)temp[2],tl[0], tl[1]))
+            {
+                i--;
+            }
             else{
                 tempOP = OPNum[0] + tl[0] + OPNum[1];
                 if(OPNum[2] != "\0")
                     tempOP = OPNum[0] + tl[0] + OPNum[1] + tl[1] + OPNum[2];
                 Operation.add(tempOP);
 
-                //double result_temp = Result.DataIn(temp[0], temp[1], temp[2], tl[0], tl[1]);
-
-
-                //System.out.print(NumberConverter.convertNumber(result_temp) + "  ");
                 System.out.println( Operation.get(i) );
 
 

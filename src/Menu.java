@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 public class Menu {
     public static void Show() {
@@ -20,13 +21,38 @@ public class Menu {
                 Datain();
                 break;
             case 1:
-                System.out.println("检查答案");
+                DataCheck();
                 break;
 
             default:
                 System.out.println("用户关闭了对话框");
                 break;
         }
+    }
+
+    public static void DataCheck() {
+        String temp = "\t", daan = "\t";
+        JFileChooser fileChooser = new JFileChooser();
+        int returnValue = fileChooser.showOpenDialog(null);
+        File selectedFile = null;
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            selectedFile = fileChooser.getSelectedFile();
+//            System.out.println("选择的文件是：" + selectedFile.getName());
+             temp = selectedFile.getName();
+        }
+        JFileChooser fileChooser2 = new JFileChooser();
+        int returnValue2 = fileChooser.showOpenDialog(null);
+        File selectedFile2 = null;
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            selectedFile2 = fileChooser.getSelectedFile();
+//            System.out.println("选择的文件是：" + selectedFile.getName());
+            daan = selectedFile2.getName();
+        }
+
+        test.main1(temp,daan);
+        //Correct.CompareFiles.compareFiles(temp, daan);
+
+
     }
 
     public static void PRINT1(String[] a){
@@ -58,7 +84,8 @@ public class Menu {
             String[] a = new String[num1+1];
             a = Main.CreatOperation(num1, num2);
             PRINT1(a);
-            File.DataWrite(a);
+            FileTool.DataWrite(a);
+
         }
     }
 
