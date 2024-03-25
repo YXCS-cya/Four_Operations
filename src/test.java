@@ -1,6 +1,7 @@
 //package org.example;
 //import com.sun.xml.internal.txw2.output.DataWriter;
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class test {
             File.DataWriter(out);
             CompareFiles.compareFiles("output.txt", daan);
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "您选择的文件有误！\n请重新选择正确的文件!", "四则运算式", JOptionPane.INFORMATION_MESSAGE);
             e.printStackTrace();
         }
     }
@@ -89,6 +91,7 @@ public class test {
                     fr[a].numerator = Integer.parseInt(tokens[i + 2]);
                     fr[a].denominator = Integer.parseInt(tokens[i + 4]);
                     a++;
+                    if(i+5 == tokens.length) break;
                     op[b] = tokens[i + 5].charAt(0);
                     b++;
                     i += 4;
@@ -273,6 +276,7 @@ public class test {
                     {
                         if(txtFile.exists()){
                             Desktop.getDesktop().open(txtFile);
+                            JOptionPane.showMessageDialog(null, "校对结果已导入Grade.txt文档！", "四则运算式", JOptionPane.INFORMATION_MESSAGE);
                         }else{
                             System.out.println("File not found!");
                         }

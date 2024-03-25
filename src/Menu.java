@@ -9,11 +9,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 
 public class Menu {
     public static void Show() {
         Object[] options = {"生成四则运算式", "检查答案"};
-        int option = JOptionPane.showOptionDialog(null, "请选择一个选项：", "自定义选项对话框", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+        int option = JOptionPane.showOptionDialog(null, "请选择一个选项：", "四则运算生成-检验器", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 
         switch (option) {
             case 0:
@@ -32,6 +33,7 @@ public class Menu {
 
     public static void DataCheck() {
         String temp = "\t", daan = "\t";
+        JOptionPane.showMessageDialog(null, "请选择需要校对的题目！（txt文档）\n格式：1.a+b'c/d*e", "四则运算式", JOptionPane.INFORMATION_MESSAGE);
         JFileChooser fileChooser = new JFileChooser();
         int returnValue = fileChooser.showOpenDialog(null);
         File selectedFile = null;
@@ -40,6 +42,7 @@ public class Menu {
 //            System.out.println("选择的文件是：" + selectedFile.getName());
              temp = selectedFile.getName();
         }
+        JOptionPane.showMessageDialog(null, "请选择您的答案文件！（txt文档）\n格式：1.b'c/d", "四则运算式", JOptionPane.INFORMATION_MESSAGE);
         JFileChooser fileChooser2 = new JFileChooser();
         int returnValue2 = fileChooser.showOpenDialog(null);
         File selectedFile2 = null;
@@ -52,6 +55,7 @@ public class Menu {
         test.main1(temp,daan);
         //Correct.CompareFiles.compareFiles(temp, daan);
 
+        Show();
 
     }
 
@@ -59,7 +63,24 @@ public class Menu {
         String Loading = 1 + "." + a[0];
         if(a.length > 30)
         {
-            JOptionPane.showMessageDialog(null, "生成题目数量较多，请打开Exercises.txt文件查看！", "四则运算式", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "生成题目数量较多，请在Exercises.txt文件查看！", "四则运算式", JOptionPane.INFORMATION_MESSAGE);
+            try{
+                java.io.File txtFile = new java.io.File("Exercises.txt");
+                {
+                    if(txtFile.exists()){
+                        Desktop.getDesktop().open(txtFile);
+
+                    }else{
+                        System.out.println("File not found!");
+                    }
+                }
+            }
+
+            catch(IOException e)
+
+            {
+                System.out.println("打开文件出现错误："+e.getMessage());
+            }
         }
         else{
             for(int i = 1; i < a.length; i++){
@@ -69,27 +90,33 @@ public class Menu {
         }
     }
 
-    public static void Datain(){
+    public static void Datain() {
         String input = JOptionPane.showInputDialog(null, "请输入生成题目数量" + "\n（如果生成的题目数过大，请调整算数的范围，否则难以避免出现类似题目）", "题目生成", JOptionPane.QUESTION_MESSAGE);
         int num1 = 0, num2 = 0;
         if (input == null)
             System.out.println("用户取消输入");
-        else {
-            String input_Bound = JOptionPane.showInputDialog(null, "请输入生成题目数值范围（如：100）" , "题目生成", JOptionPane.QUESTION_MESSAGE);
-            num1 = Integer.parseInt(input);
-            num2 = Integer.parseInt(input_Bound);
+        else if (input.equals("0") || input.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "您输入的范围有误！\n可输入最小值为1", "四则运算式", JOptionPane.INFORMATION_MESSAGE);
+            Datain();
+        } else {
+            String input_Bound = JOptionPane.showInputDialog(null, "请输入生成题目数值范围（如：100）", "题目生成", JOptionPane.QUESTION_MESSAGE);
+
+            if (input_Bound.equals("0") || input_Bound.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "您输入的范围有误！\n可输入最小值为1", "四则运算式", JOptionPane.INFORMATION_MESSAGE);
+                Datain();}
+                num1 = Integer.parseInt(input);
+                num2 = Integer.parseInt(input_Bound);
 
 
-
-            String[] a = new String[num1+1];
-            a = Main.CreatOperation(num1, num2);
-            PRINT1(a);
-            FileTool.DataWrite(a);
-
+                String[] a = new String[num1 + 1];
+                a = Main.CreatOperation(num1, num2);
+                PRINT1(a);
+                FileTool.DataWrite(a);
+                Show();
+            }
         }
     }
 
-}
 
 /*JFrame frame = new JFrame("Menu Window Example");
 
